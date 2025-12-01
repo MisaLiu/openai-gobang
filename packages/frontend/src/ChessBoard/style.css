@@ -1,0 +1,131 @@
+.chessboard-container {
+  --chessboard-size: 15;
+  --block-size: 2em;
+
+  --dom-size: calc((var(--chessboard-size, 15) + 1) * var(--block-size, 2em));
+  
+  display: grid;
+  width: var(--dom-size);
+  height: var(--dom-size);
+  padding: var(--block-size);
+  grid-template-rows: repeat(12, 1fr);
+  grid-template-columns: repeat(12, 1fr);
+  gap: 0px;
+}
+
+.chessboard-container .labels-row {
+  display: flex;
+  height: var(--block-size);
+  text-align: center;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: nowrap;
+  grid-column: span 11 / span 11;
+  grid-column-start: 2;
+  grid-row-start: 1;
+}
+
+.chessboard-container .labels-column {
+  display: flex;
+  width: var(--block-size);
+  alignment-baseline: central;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: nowrap;
+  grid-row: span 11 / span 11;
+  grid-row-start: 2;
+}
+
+.chessboard-container .chessboard-main {
+  --blocks-dom-size: calc(var(--block-size) * (var(--chessboard-size) - 1));
+
+  display: block;
+  position: relative;
+  width: var(--blocks-dom-size);
+  height: var(--blocks-dom-size);
+  grid-column: span 11 / span 11;
+  grid-row: span 11 / span 11;
+  grid-row-start: 2;
+}
+
+.chessboard-container .chessboard-main .blocks {
+  display: flex;
+  width: var(--blocks-dom-size);
+  height: var(--blocks-dom-size);
+  flex-direction: column;
+  align-items: stretch;
+  flex-wrap: nowrap;
+}
+
+.chessboard-container .chessboard-main .blocks .blocks-row {
+  display: flex;
+  width: var(--blocks-dom-size);
+  height: var(--block-size);
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.chessboard-container .chessboard-main .blocks .block {
+  width: var(--block-size);
+  height: var(--block-size);
+  border: 1px solid currentColor;
+  border-top: unset;
+  border-right: unset;
+  box-sizing: border-box;
+}
+
+.chessboard-container .chessboard-main .blocks .blocks-row:first-child .block {
+  border-top: 1px solid currentColor;
+}
+
+.chessboard-container .chessboard-main .blocks .block:last-child {
+  border-right: 1px solid currentColor;
+}
+
+.chessboard-container .chessboard-main .pieces {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: var(--blocks-dom-size);
+  height: var(--blocks-dom-size);
+}
+
+.chessboard-container .chessboard-main .pieces > div.piece {
+  --pos-row: 0;
+  --pos-column: 0;
+
+  display: block;
+  position: absolute;
+  top: calc(var(--block-size) * var(--pos-column));
+  left: calc(var(--block-size) * var(--pos-row));
+  width: var(--block-size);
+  height: var(--block-size);
+  transform: translate(-50%, -50%);
+  border-radius: calc(var(--block-size) / 2);
+  pointer-events: none;
+}
+
+.chessboard-container .chessboard-main .pieces > div.piece.black {
+  background-color: red;
+}
+
+.chessboard-container .chessboard-main .pieces > div.piece.white {
+  background-color: blue;
+}
+
+.chessboard-container .chessboard-main .pieces > div.piece.pointing {
+  opacity: 0.5;
+}
+
+.chessboard-container::before {
+  content: '';
+  width: var(--block-size);
+  height: var(--block-size);
+  grid-column-start: 1;
+  grid-row-start: 1;
+}
