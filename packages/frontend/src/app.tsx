@@ -76,8 +76,7 @@ export function App() {
       setPieces(e => [ ...e, data.piece ]);
       setAllowPlace(true);
 
-      if (!data.thoughts) return;
-      thoughtsRef.current = data.thoughts;
+      if (data.thoughts) thoughtsRef.current = data.thoughts;
 
       if (getLatestHistory()!.placedBy !== 'llm') {
         addHistory({
