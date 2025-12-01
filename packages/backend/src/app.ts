@@ -1,7 +1,11 @@
 import 'dotenv/config';
 import express from 'express';
+import session from 'express-session';
 
 const app = express();
+
+app.use(session({ secret: `openai-gobang-${Date.now()}` }));
+app.use(express.json());
 
 app.use('/', (_req, res) => {
   res.status(200)
