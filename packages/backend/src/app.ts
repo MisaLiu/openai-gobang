@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import express from 'express';
 
 const app = express();
@@ -7,6 +8,6 @@ app.use('/', (_req, res) => {
     .json({ msg: 'Hello world!' });
 });
 
-app.listen(3000, () => {
+app.listen(process.env.LISTEN_PORT, () => {
   console.log('Backend is now ready!');
 });
