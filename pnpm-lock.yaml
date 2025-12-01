@@ -45,6 +45,12 @@ importers:
 
   packages/frontend:
     dependencies:
+      eventemitter3:
+        specifier: ^5.0.1
+        version: 5.0.1
+      nanoid:
+        specifier: ^5.1.6
+        version: 5.1.6
       preact:
         specifier: ^10.27.2
         version: 10.27.2

@@ -9,6 +9,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "eventemitter3": "^5.0.1",
+    "nanoid": "^5.1.6",
     "preact": "^10.27.2"
   },
   "devDependencies": {
