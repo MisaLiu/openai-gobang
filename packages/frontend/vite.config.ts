@@ -9,6 +9,10 @@ export default defineConfig({
         target: 'http://127.0.0.1:5678/',
         changeOrigin: true,
       },
+      '/api/ws': {
+        target: 'http://127.0.0.1:5678/',
+        ws: true,
+      }
     },
   },
   plugins: [preact()],
