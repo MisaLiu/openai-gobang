@@ -1,4 +1,4 @@
-import { hasChat, deleteChat, sendChat } from '../controller/openai';
+import { hasChat, deleteChat, sendChat } from '../utils/openai';
 import { buildPrompt } from '../utils/prompt';
 import { buildString } from '../utils/chess';
 import type { ChessPiece } from '../types';

@@ -1,6 +1,6 @@
 import OpenAI from 'openai';
 import { ChatHistory } from '../cache';
-import { buildPrompt } from '../utils/prompt';
+import { buildPrompt } from './prompt';
 import type { ChatCompletionMessageParam } from 'openai/resources';
 
 const openai = new OpenAI({

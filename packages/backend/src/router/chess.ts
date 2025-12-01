@@ -1,6 +1,6 @@
 import express from 'express';
 import { startChess, placePiece } from '../controller/chess';
-import { hasChat } from '../controller/openai';
+import { hasChat } from '../utils/openai';
 import { parseString } from '../utils/chess';
 
 interface InitProps {
