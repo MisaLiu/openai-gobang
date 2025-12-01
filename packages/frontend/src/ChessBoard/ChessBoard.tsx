@@ -1,4 +1,3 @@
-import { useState } from 'preact/hooks';
 import ChessLabelRow from './LabelRow';
 import ChessLabelColumn from './LabelColumn';
 import ChessBlocks from './Blocks';
@@ -7,22 +6,20 @@ import './style.css';
 import type { ChessPiece } from '../types';
 
 interface ChessBoardProps {
+  onPlaced: (piece: ChessPiece) => void;
   size?: number;
+  placeType?: 'black' | 'white',
+  pieces?: ChessPiece[],
+  allowPlace?: boolean,
 }
 
 const ChessBoard = ({
-  size = 15
+  onPlaced,
+  size = 15,
+  placeType = 'black',
+  pieces = [],
+  allowPlace = true,
 }: ChessBoardProps) => {
-  const [ pieceType, setPieceType ] = useState<'black' | 'white'>('black');
-  const [ pieces, setPieces ] = useState<ChessPiece[]>([]);
-
-  const handlePiecePlaced = (piece: ChessPiece) => {
-    setPieces((e) => [ ...e, piece ]);
-
-    if (piece.type === 'black') setPieceType('white');
-    else setPieceType('black');
-  }; 
-
   return (
     <div
       class="chessboard-container"
@@ -37,8 +34,9 @@ const ChessBoard = ({
         <ChessPieces
           size={size}
           pieces={pieces}
-          onPlace={handlePiecePlaced}
-          placeType={pieceType}
+          onPlace={onPlaced}
+          placeType={placeType}
+          allowPlace={allowPlace}
         />
       </div>
     </div>

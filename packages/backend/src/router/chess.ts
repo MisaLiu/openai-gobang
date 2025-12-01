@@ -36,6 +36,7 @@ router.post('/new', (req, res) => {
           msg: 'ok',
           data: {
             ready: result === 'READY',
+            piece: parseString(result),
             original: result,
           }
         });

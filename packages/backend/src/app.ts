@@ -15,6 +15,6 @@ app.use('/', (_req, res) => {
     .json({ msg: 'Hello world!' });
 });
 
-app.listen(process.env.LISTEN_PORT, () => {
+app.listen(process.env.LISTEN_PORT || 5678, () => {
   console.log('Backend is now ready!');
 });
