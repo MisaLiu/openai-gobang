@@ -4,3 +4,8 @@ export interface ChessPiece {
   row: number,
   column: number,
 };
+
+export interface ChatHistory {
+  role: 'system' | 'user' | 'assistant',
+  content: string,
+}
