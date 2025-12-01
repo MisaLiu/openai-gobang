@@ -13,6 +13,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+div#app {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: visible;
+}
+
 a {
   font-weight: 500;
   color: #646cff;

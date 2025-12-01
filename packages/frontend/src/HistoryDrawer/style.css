@@ -1,0 +1,44 @@
+.drawer {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  max-width: 350px;
+  height: 100vh;
+  padding: 1em;
+  overflow-y: auto;
+  box-sizing: border-box;
+}
+
+.drawer.right {
+  right: 0;
+}
+
+.history-list .history-list-item {
+  padding-bottom: 0.5em;
+}
+
+.history-list .history-list-item:last-child {
+  padding-bottom: 0;
+}
+
+.history-list .history-list-item .history-list-item-header {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+  flex-wrap: nowrap;
+}
+
+.history-list .history-list-item .history-thoughts {
+  border: 1px solid currentColor;
+  border-radius: 1em;
+}
+
+.history-list .history-list-item .history-thoughts .history-thoughts-title {
+  padding: 0 0.5em;
+  cursor: pointer;
+}
+
+.history-list .history-list-item .history-thoughts .history-thoughts-content {
+  border-top: 1px solid currentColor;
+  padding: 0 0.5em;
+}

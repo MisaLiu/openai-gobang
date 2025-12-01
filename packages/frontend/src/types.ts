@@ -9,3 +9,11 @@ export interface ChessPiece {
   row: number,
   column: number,
 };
+
+export interface PlaceHistory {
+  placedBy: 'user'| 'llm',
+  timestamp: number,
+  piece?: ChessPiece,
+  timeSpent?: number,
+  thoughts?: string,
+};

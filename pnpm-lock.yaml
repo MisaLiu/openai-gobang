@@ -54,6 +54,9 @@ importers:
       preact:
         specifier: ^10.27.2
         version: 10.27.2
+      zustand:
+        specifier: ^5.0.9
+        version: 5.0.9
     devDependencies:
       '@preact/preset-vite':
         specifier: ^2.10.2
