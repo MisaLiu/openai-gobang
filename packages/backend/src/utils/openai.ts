@@ -52,7 +52,7 @@ export const sendChat = (sessionId: string, message: string, prompt?: string) =>
     if (!result) return rej('Failed to send chat to LLM.');
     if (reasoning_content) thoughts = reasoning_content;
 
-    chats.push({ role: 'assistant', content: result });
+    chats.push(chatMessage);
     ChatHistory.set(sessionId, chats);
 
     res({
