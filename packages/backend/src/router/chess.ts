@@ -29,15 +29,15 @@ router.post('/new', (req, res) => {
 
   const { difficulty, size } = req.body as InitProps;
   startChess(req.sessionID, difficulty, size)
-    .then((result) => {
+    .then((e) => {
       res
         .status(200)
         .json({
           msg: 'ok',
           data: {
-            ready: result === 'READY',
-            piece: parseString(result),
-            original: result,
+            ready: e.message === 'READY',
+            piece: parseString(e.message),
+            original: e.message,
           }
         });
     })
@@ -63,15 +63,15 @@ router.post('/place', (req, res) => {
   }
 
   placePiece(req.sessionID, req.body)
-    .then((result) => {
+    .then((e) => {
       res
         .status(200)
         .json({
           msg: 'ok',
           data: {
-            piece: parseString(result),
-            thoughts: null,
-            original: result,
+            piece: parseString(e.message),
+            thoughts: e.thoughts,
+            original: e.message,
           }
         });
     })
