@@ -3,3 +3,9 @@ form.settings-radio-group {
   flex-direction: row;
   gap: 2em
 }
+
+div.thought-container pre code {
+  overflow-x: hidden;
+  text-overflow: clip;
+  white-space: break-spaces;
+}

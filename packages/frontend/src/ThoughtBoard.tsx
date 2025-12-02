@@ -34,9 +34,13 @@ const Thought = () => {
     <>
       <h2>LLM 的思考</h2>
       <div class="thought-container">
-        {!thought ? (
-          '该模型貌似不支持此功能'
-        ) : thought}
+        <pre>
+          <code>
+            {!thought ? (
+              '该模型貌似不支持此功能'
+            ) : thought}
+          </code>
+        </pre>
       </div>
     </>
   )
