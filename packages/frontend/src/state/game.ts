@@ -8,6 +8,7 @@ interface IGameStore {
   isStarted: boolean,
   allowPlace: boolean,
 
+  userPlaceStartTime: number,
   pieces: ChessPiece[],
   histories: PlaceHistory[],
 
@@ -18,6 +19,7 @@ const GameStore = createStore<IGameStore>(() => ({
   isStarted: false,
   allowPlace: false,
 
+  userPlaceStartTime: -1,
   pieces: [],
   histories: [],
 
@@ -35,7 +37,10 @@ export const startGame = () => {
   }
 
   ws.once('ready', (data: { piece?: ChessPiece, thoughts?: string }) => {
+    const currentTime = Date.now();
+
     GameStore.setState({
+      userPlaceStartTime: currentTime,
       isStarted: true,
       allowPlace: true,
     });
@@ -47,7 +52,8 @@ export const startGame = () => {
           {
             placedBy: 'llm',
             piece: data.piece,
-            timestamp: Date.now(),
+            timestamp: currentTime,
+            timeSpent: 0
           }
         ],
       });
@@ -59,16 +65,18 @@ export const startGame = () => {
   });
 
   ws.on('place', (data: { thoughts?: string, piece: ChessPiece, timeSpent?: number }) => {
+    const currentTime = Date.now();
     const { pieces, histories } = GameStore.getState();
-
+    
     GameStore.setState({
+      userPlaceStartTime: currentTime,
       pieces: [ data.piece, ...pieces ],
       histories: [
         {
           placedBy: 'llm',
           piece: data.piece,
-          timeSpent: data.timeSpent,
-          timestamp: Date.now(),
+          timeSpent: data.timeSpent || 0,
+          timestamp: currentTime,
         },
         ...histories
       ],
@@ -94,14 +102,16 @@ export const placePiece = (piece: ChessPiece) => {
   const { ws } = GameStore.getState();
   if (!ws) return;
 
-  const { pieces, histories } = GameStore.getState();
+  const currentTime = Date.now();
+  const { userPlaceStartTime, pieces, histories } = GameStore.getState();
   GameStore.setState({
     pieces: [ piece, ...pieces ],
     histories: [
       {
         placedBy: 'user',
         piece,
-        timestamp: Date.now(),
+        timestamp: currentTime,
+        timeSpent: (currentTime - userPlaceStartTime) / 1000,
       },
       ...histories,
     ],
