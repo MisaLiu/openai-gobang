@@ -1,5 +1,5 @@
 import ChessBoard from '../ChessBoard/ChessBoard';
-import HistoryDrawer from '../HistoryDrawer/HistoryDrawer';
+import HistoryBoard from '../HistoryBoard/HistoryBoard';
 import ThoughtBoard from '../ThoughtBoard';
 
 const GamePanel = () => {
@@ -7,7 +7,7 @@ const GamePanel = () => {
     <>
       <ChessBoard />
       <hr />
-      <HistoryDrawer />
+      <HistoryBoard />
       <hr />
       <ThoughtBoard />
     </>
