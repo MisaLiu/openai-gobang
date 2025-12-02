@@ -1,5 +1,6 @@
 import { createStore } from 'zustand';
 import SettingsStore from './settings';
+import ThoughtStore, { appendThought } from './thought';
 import { ChessWebSocket } from '../websocket';
 import type { ChessPiece, PlaceHistory } from '../types';
 
@@ -56,6 +57,15 @@ export const startGame = () => {
       ],
       allowPlace: true,
     });
+
+    ThoughtStore.setState({
+      thought: data.thoughts,
+    });
+  });
+
+  ws.on('stream', (data: { content: string, reasoning_content?: string }) => {
+    if (typeof data.reasoning_content !== 'string') return;
+    appendThought(data.reasoning_content);
   });
 
   GameStore.setState({
@@ -79,6 +89,10 @@ export const placePiece = (piece: ChessPiece) => {
       ...histories,
     ],
     allowPlace: false,
+  });
+
+  ThoughtStore.setState({
+    thought: '',
   });
 
   ws.place(piece);
