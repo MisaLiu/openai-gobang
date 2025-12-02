@@ -2,6 +2,7 @@ import { createStore } from 'zustand';
 import SettingsStore from './settings';
 import ThoughtStore, { appendThought } from './thought';
 import { ChessWebSocket } from '../websocket';
+import { checkWin } from '../utils';
 import type { ChessPiece, PlaceHistory, PieceArray } from '../types';
 
 const appendPieceToArr = (pieceArr: PieceArray, piece: ChessPiece) => {
@@ -21,6 +22,7 @@ interface IGameStore {
   userPlaceStartTime: number,
   pieces: PieceArray,
   histories: PlaceHistory[],
+  result: 1 | 2 | null,
 
   ws: ChessWebSocket | null,
 }
@@ -32,6 +34,7 @@ const GameStore = createStore<IGameStore>(() => ({
   userPlaceStartTime: -1,
   pieces: [],
   histories: [],
+  result: null,
 
   ws: null,
 }));
@@ -77,7 +80,8 @@ export const startGame = () => {
   ws.on('place', (data: { thoughts?: string, piece: ChessPiece, timeSpent?: number }) => {
     const currentTime = Date.now();
     const { pieces, histories } = GameStore.getState();
-    
+    const isWin = checkWin(pieces, data.piece);
+
     GameStore.setState({
       userPlaceStartTime: currentTime,
       pieces: appendPieceToArr(pieces, data.piece),
@@ -90,12 +94,21 @@ export const startGame = () => {
         },
         ...histories
       ],
-      allowPlace: true,
     });
 
     ThoughtStore.setState({
       thought: data.thoughts,
     });
+
+    if (!isWin) {
+      GameStore.setState({
+        allowPlace: true,
+      });
+    } else {
+      GameStore.setState({
+        result: 2,
+      });
+    }
   });
 
   ws.on('stream', (data: { content: string, reasoning_content?: string }) => {
@@ -114,6 +127,8 @@ export const placePiece = (piece: ChessPiece) => {
 
   const currentTime = Date.now();
   const { userPlaceStartTime, pieces, histories } = GameStore.getState();
+  const isWin = checkWin(pieces, piece);
+
   GameStore.setState({
     pieces: appendPieceToArr(pieces, piece),
     histories: [
@@ -127,6 +142,13 @@ export const placePiece = (piece: ChessPiece) => {
     ],
     allowPlace: false,
   });
+
+  if (isWin) {
+    GameStore.setState({
+      result: 1,
+    });
+    return;
+  }
 
   ThoughtStore.setState({
     thought: '',
