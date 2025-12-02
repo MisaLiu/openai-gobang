@@ -2,6 +2,7 @@ import ChessLabelRow from './LabelRow';
 import ChessLabelColumn from './LabelColumn';
 import ChessBlocks from './Blocks';
 import ChessPieces from "./Pieces";
+import ChessBoardOverlay from './Overlay';
 import SettingsStore from '../state/settings';
 import './style.css';
 
@@ -23,6 +24,7 @@ const ChessBoard = () => {
           size={size}
         />
       </div>
+      <ChessBoardOverlay />
     </div>
   );
 };

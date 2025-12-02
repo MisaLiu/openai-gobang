@@ -5,6 +5,7 @@
   --dom-size: calc((var(--chessboard-size, 15) + 1) * var(--block-size, 2em));
   
   display: grid;
+  position: relative;
   width: var(--dom-size);
   height: var(--dom-size);
   padding: var(--block-size);
@@ -131,4 +132,40 @@
   height: var(--block-size);
   grid-column-start: 1;
   grid-row-start: 1;
+}
+
+.chessboard-container .chessboard-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  font-size: 2em;
+  font-weight: 600;
+  opacity: 0;
+  transition: opacity .2s linear;
+  pointer-events: none;
+}
+
+.chessboard-container .chessboard-overlay::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--background-body);
+  opacity: 0.5;
+}
+
+.chessboard-container .chessboard-overlay span {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.chessboard-container .chessboard-overlay.show {
+  opacity: 1;
+  pointer-events: all;
 }
