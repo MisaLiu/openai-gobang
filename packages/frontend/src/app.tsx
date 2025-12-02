@@ -1,19 +1,25 @@
-import GroupBox from './GroupBox'
-import ChessBoard from './ChessBoard/ChessBoard'
-import HistoryDrawer from './HistoryDrawer/HistoryDrawer'
-import { startGame } from './state/game'
+import { useEffect, useState } from 'preact/hooks'
+import GameStore from './state/game'
+import SettingsPanel from './Panel/SettingsPanel'
+import GamePanel from './Panel/GamePanel'
 import './app.css'
 
 export function App() {
+  const [ isGamePlaying, setIsGamePlaying ] = useState<boolean>(false);
+
+  useEffect(() => {
+    return GameStore.subscribe((s, p) => {
+      if (s.ws !== p.ws) setIsGamePlaying(!!s.ws);
+    });
+  }, []);
+
   return (
     <>
-      <button onClick={startGame}>WebSocket</button>
-      <GroupBox
-        title='棋盘'
-      >
-        <ChessBoard />
-      </GroupBox>
-      <HistoryDrawer />
+      {!isGamePlaying ? (
+        <SettingsPanel />
+      ) : (
+        <GamePanel />
+      )}
     </>
   )
 }

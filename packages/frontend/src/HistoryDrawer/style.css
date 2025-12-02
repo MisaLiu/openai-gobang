@@ -1,16 +1,6 @@
-.drawer {
-  position: absolute;
-  top: 0;
-  width: 100%;
-  max-width: 350px;
-  height: 100vh;
-  padding: 1em;
-  overflow-y: auto;
-  box-sizing: border-box;
-}
-
-.drawer.right {
-  right: 0;
+.history-list {
+  max-height: 10em;
+  overflow-y: scroll;
 }
 
 .history-list .history-list-item {
@@ -23,9 +13,14 @@
 
 .history-list .history-list-item .history-list-item-header {
   display: flex;
+  color: var(--text-main);
   justify-content: space-between;
   flex-direction: row;
   flex-wrap: nowrap;
+}
+
+.history-list .history-list-item .history-pieces {
+  color: var(--text-muted);
 }
 
 .history-list .history-list-item .history-thoughts {

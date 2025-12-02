@@ -1,4 +1,3 @@
-import { useState, useEffect } from 'preact/hooks';
 import ChessLabelRow from './LabelRow';
 import ChessLabelColumn from './LabelColumn';
 import ChessBlocks from './Blocks';
@@ -7,13 +6,7 @@ import SettingsStore from '../state/settings';
 import './style.css';
 
 const ChessBoard = () => {
-  const [ size, setSize ] = useState<number>(15);
-
-  useEffect(() => {
-    return SettingsStore.subscribe((s, p) => {
-      if (s.boardSize !== p.boardSize) setSize(s.boardSize);
-    });
-  }, []);
+  const size = SettingsStore.getState().boardSize;
 
   return (
     <div

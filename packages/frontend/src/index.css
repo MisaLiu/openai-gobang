@@ -1,6 +1,11 @@
 @import url('../node_modules/normalize.css/normalize.css');
 @import url('../node_modules/water.css/out/water.css');
 
+:root {
+  --piece-color-black: rgb(255, 49, 49);
+  --piece-color-white: rgb(50, 50, 255);
+}
+
 fieldset.groupbox {
   border: 2px solid currentColor;
   border-radius: 0.5em;
