@@ -51,11 +51,11 @@ export const startGame = () => {
           }
         ],
       });
-
-      ThoughtStore.setState({
-        thought: data.thoughts,
-      });
     }
+
+    ThoughtStore.setState({
+      thought: data.thoughts,
+    });
   });
 
   ws.on('place', (data: { thoughts?: string, piece: ChessPiece, timeSpent?: number }) => {
