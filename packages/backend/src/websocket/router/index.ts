@@ -14,7 +14,7 @@ export const applyWebSockerRouter = (msg: WebSocketMessage, ws: InstanceType<typ
 
   switch (type) {
     case 'start': {
-      sendChat(data.sessionId, 'READY', buildPrompt(data.difficulty, data.size))
+      sendChat(data.sessionId, 'READY', buildPrompt(data.difficulty, data.size, data.llmFirst))
         .then((e) => {
           sendMsg({
             type: 'ready',
@@ -22,6 +22,7 @@ export const applyWebSockerRouter = (msg: WebSocketMessage, ws: InstanceType<typ
               ready: e.message === 'READY',
               piece: parseString(e.message),
               original: e.message,
+              thoughts: e.thoughts || (void 0),
             }
           });
         })

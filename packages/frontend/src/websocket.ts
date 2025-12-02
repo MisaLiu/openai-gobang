@@ -8,18 +8,18 @@ export class ChessWebSocket extends EventEmitter {
   private mq: (Object | string)[] = [];
   private pingClock?: ReturnType<typeof setInterval>;
   
-  constructor(difficulty: 0 | 1 | 2 | 3, size: number = 15) {
+  constructor(difficulty: 0 | 1 | 2 | 3, size: number = 15, llmFirst = false) {
     super();
 
-    this.start(difficulty, size);
+    this.start(difficulty, size, llmFirst);
   }
 
-  start(difficulty: 0 | 1 | 2 | 3, size: number = 15) {
+  start(difficulty: 0 | 1 | 2 | 3, size: number = 15, llmFirst = false) {
     this.ws = this.createWs();
     this.send({
       type: 'start',
       data: {
-        difficulty, size,
+        difficulty, size, llmFirst,
         sessionId: this.sessionId,
       },
     });

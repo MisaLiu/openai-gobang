@@ -28,17 +28,34 @@ export const startGame = () => {
   const settings = SettingsStore.getState();
 
   let ws = GameStore.getState().ws;
-  if (!ws) ws = new ChessWebSocket(settings.difficulty, settings.boardSize);
+  if (!ws) ws = new ChessWebSocket(settings.difficulty, settings.boardSize, settings.llmFirst);
   else {
     ws.removeAllListeners();
-    ws.start(settings.difficulty, settings.boardSize);
+    ws.start(settings.difficulty, settings.boardSize, settings.llmFirst);
   }
-  
-  ws.once('ready', () => {
+
+  ws.once('ready', (data: { piece?: ChessPiece, thoughts?: string }) => {
     GameStore.setState({
       isStarted: true,
       allowPlace: true,
     });
+
+    if (data.piece) {
+      GameStore.setState({
+        pieces: [ data.piece ],
+        histories: [
+          {
+            placedBy: 'llm',
+            piece: data.piece,
+            timestamp: Date.now(),
+          }
+        ],
+      });
+
+      ThoughtStore.setState({
+        thought: data.thoughts,
+      });
+    }
   });
 
   ws.on('place', (data: { thoughts?: string, piece: ChessPiece, timeSpent?: number }) => {

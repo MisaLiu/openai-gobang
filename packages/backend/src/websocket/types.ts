@@ -12,6 +12,7 @@ type WebSocketMessageStart = {
     sessionId: string,
     difficulty: 0 | 1 | 2 | 3,
     size: number,
+    llmFirst: boolean,
   }
 };
 
@@ -21,6 +22,7 @@ type WebSocketMessageReady = {
     ready: boolean,
     piece: ChessPiece | null,
     original: string,
+    thoughts?: string,
   }
 };
 

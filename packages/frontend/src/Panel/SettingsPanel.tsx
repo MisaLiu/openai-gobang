@@ -1,4 +1,4 @@
-import { setDifficulty, setBoardSize } from '../state/settings';
+import { setDifficulty, setBoardSize, setLLMFirst } from '../state/settings';
 import { startGame } from '../state/game';
 import type { TargetedInputEvent } from 'preact';
 
@@ -13,6 +13,12 @@ const SettingsPanel = () => {
     const target = e.target as HTMLInputElement | undefined;
     if (!target) return;
     setBoardSize(parseInt(target.value));
+  };
+
+  const updateFirstMove = (e: TargetedInputEvent<HTMLFormElement>) => {
+    const target = e.target as HTMLInputElement | undefined;
+    if (!target) return;
+    setLLMFirst(target.value == 'true');
   };
 
   return (
@@ -52,6 +58,18 @@ const SettingsPanel = () => {
         <label>
           <input type="radio" value={19} name="boardSize" />
           19*19
+        </label>
+      </form>
+
+      <h3>谁执黑先手？</h3>
+      <form class="settings-radio-group first-move" onInput={updateFirstMove}>
+        <label>
+          <input type="radio" value='false' name="firstMove" checked />
+          您执黑先手
+        </label>
+        <label>
+          <input type="radio" value='true' name="firstMove" />
+          LLM 执黑先手
         </label>
       </form>
 

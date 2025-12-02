@@ -41,10 +41,12 @@ interface ChessPieces {
 const ChessPieces = ({
   size,
 }: ChessPieces) => {
+  const { llmFirst } = SettingsStore.getState();
+  const placeType = llmFirst ? 'white' : 'black';
+
   const containerRef = useRef<HTMLDivElement>(null);
   const [ pieces, setPieces ] = useState<ChessPiece[]>([]);
   const [ allowPlace, setAllowPlace ] = useState<boolean>(false);
-  const [ placeType, setPlaceType ] = useState<'black' | 'white'>('black');
   const [ pointerPiecePosX, setPointerPiecePosX ] = useState(-1);
   const [ pointerPiecePosY, setPointerPiecePosY ] = useState(-1);
 
@@ -97,13 +99,8 @@ const ChessPieces = ({
       if (s.allowPlace !== p.allowPlace) updateAllowPlace();
     });
 
-    const unsubSettings = SettingsStore.subscribe((s, p) => {
-      if (s.llmFirst !== p.llmFirst) setPlaceType(s.llmFirst ? 'white' : 'black');
-    });
-
     return (() => {
       unsubGame();
-      unsubSettings();
     });
   }, []);
 

@@ -13,9 +13,15 @@ const boardSizePromptBuilder = (boardSize: number) => ([
   '棋子位置的表示方式为「black:A1」或「white:A1」：其中「black」代表黑子，「white」代表白子；字母表示横向位置，数字表示纵向位置。'
 ].join(''));
 
+const firstMovePromptBuilder = (llmFirst: boolean = false) => {
+  if (llmFirst) return '当用户向你发送「READY」后，请按照上述约定向用户发送你的第一步棋的落子位置。本次对局由你执黑子并先手。';
+  return '当用户向你发送「READY」后，请直接回复「READY」表示你已准备好。本次对局由用户执黑子并先手。';
+};
+
 export const buildPrompt = (
   difficulty: 0 | 1 | 2 | 3,
   boardSize: number = 15,
+  llmFirst: boolean = false,
 ) => ([
   '你是一个五子棋练习机器人，接下来你将和用户进行五子棋对战。当前模式为「自由模式」，即除基本的五子棋规则外没有其他附加规则。',
   '',
@@ -28,5 +34,5 @@ export const buildPrompt = (
   '- 如果用户输入不包含合法坐标格式，则回复「SKIP」。',
   '- 回复中不得包含任何其他内容，只能是一个合法坐标或「SKIP」。',
   '',
-  '当你完全理解规则并准备好时，当用户向你发送「READY」后，请直接回复「READY」表示你已准备好。本次对局由用户执黑子并先手。'
+  `当你完全理解规则并准备好时，${firstMovePromptBuilder(llmFirst)}`
 ].join('\n'));
