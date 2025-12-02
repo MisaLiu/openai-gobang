@@ -31,7 +31,7 @@ export const hasChat = (sessionId: string) => {
 export const sendChat = (sessionId: string, message: string, prompt?: string) => new Promise<ChatResponse>((res, rej) => {
   let chats: IChatHistory[] = [];
 
-  if (ChatHistory.has(sessionId)) {
+  if (ChatHistory.has(sessionId) && prompt === (void 0)) {
     chats = ChatHistory.get(sessionId)!;
   } else {
     chats = [
@@ -78,7 +78,7 @@ export const sendChatStream = (
 ) => new StreamablePromise<ChatResponse>(async (res, rej, sendStream) => {
   let chats: IChatHistory[] = [];
 
-  if (ChatHistory.has(sessionId)) {
+  if (ChatHistory.has(sessionId) && prompt === (void 0)) {
     chats = ChatHistory.get(sessionId)!;
   } else {
     chats = [

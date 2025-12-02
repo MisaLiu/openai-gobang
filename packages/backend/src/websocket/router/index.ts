@@ -1,4 +1,4 @@
-import { sendChat, sendChatStream } from '../../utils/openai';
+import { deleteChat, hasChat, sendChat, sendChatStream } from '../../utils/openai';
 import { buildPrompt } from '../../utils/prompt';
 import { parseString, buildString } from '../../utils/chess';
 import type WebSocket from 'ws';
@@ -14,6 +14,7 @@ export const applyWebSockerRouter = (msg: WebSocketMessage, ws: InstanceType<typ
 
   switch (type) {
     case 'start': {
+      if (hasChat(data.sessionId)) deleteChat(data.sessionId);
       sendChat(data.sessionId, 'READY', buildPrompt(data.difficulty, data.size, data.llmFirst))
         .then((e) => {
           sendMsg({
