@@ -13,7 +13,6 @@ export interface ChessPiece {
 export interface PlaceHistory {
   placedBy: 'user'| 'llm',
   timestamp: number,
-  piece?: ChessPiece,
-  timeSpent?: number,
-  thoughts?: string,
+  piece: ChessPiece,
+  timeSpent: number,
 };

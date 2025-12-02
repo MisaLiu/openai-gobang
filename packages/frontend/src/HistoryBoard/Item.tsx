@@ -2,18 +2,11 @@ import { memo } from 'preact/compat';
 import type { PlaceHistory } from '../types';
 import { ChessBoardLabelsRow } from '../const';
 
-interface HistoryItemProps extends PlaceHistory {
-  isThoughtExpanded: boolean,
-  onExpand: (timestamp: number) => void;
-}
+interface HistoryItemProps extends Omit<PlaceHistory, 'timestamp'> {}
 
 const HistoryItem = ({
   placedBy,
-  timestamp,
-  isThoughtExpanded,
-  onExpand,
   piece,
-  thoughts,
   timeSpent,
 }: HistoryItemProps) => {
   return (
@@ -28,17 +21,6 @@ const HistoryItem = ({
         <div class="history-pieces">
           位于「{ChessBoardLabelsRow[piece.row]}{piece.column + 1}」
           （{piece.type === 'black' ? '黑子' : '白子'}）
-        </div>
-      )}
-      {thoughts && (
-        <div class="history-thoughts">
-          <div
-            class="history-thoughts-title"
-            onClick={() => onExpand(timestamp)}
-          >我的想法...</div>
-          {isThoughtExpanded && (
-            <div class="history-thoughts-content">{thoughts}</div>
-          )}
         </div>
       )}
     </div>

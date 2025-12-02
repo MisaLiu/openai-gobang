@@ -22,18 +22,3 @@
 .history-list .history-list-item .history-pieces {
   color: var(--text-muted);
 }
-
-.history-list .history-list-item .history-thoughts {
-  border: 1px solid currentColor;
-  border-radius: 1em;
-}
-
-.history-list .history-list-item .history-thoughts .history-thoughts-title {
-  padding: 0 0.5em;
-  cursor: pointer;
-}
-
-.history-list .history-list-item .history-thoughts .history-thoughts-content {
-  border-top: 1px solid currentColor;
-  padding: 0 0.5em;
-}
