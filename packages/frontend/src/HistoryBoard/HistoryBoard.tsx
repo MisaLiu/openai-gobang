@@ -1,7 +1,7 @@
 import HistoryList from './List';
 import './style.css';
 
-const HistoryDrawer = () => {
+const HistoryBoard = () => {
   return (
     <>
       <h2>落子记录</h2>
@@ -10,4 +10,4 @@ const HistoryDrawer = () => {
   );
 };
 
-export default HistoryDrawer;
+export default HistoryBoard;
