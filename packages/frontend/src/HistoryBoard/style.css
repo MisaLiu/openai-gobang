@@ -2,23 +2,3 @@
   max-height: 10em;
   overflow-y: scroll;
 }
-
-.history-list .history-list-item {
-  padding-bottom: 0.5em;
-}
-
-.history-list .history-list-item:last-child {
-  padding-bottom: 0;
-}
-
-.history-list .history-list-item .history-list-item-header {
-  display: flex;
-  color: var(--text-main);
-  justify-content: space-between;
-  flex-direction: row;
-  flex-wrap: nowrap;
-}
-
-.history-list .history-list-item .history-pieces {
-  color: var(--text-muted);
-}

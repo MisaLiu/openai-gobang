@@ -14,12 +14,25 @@ const HistoryList = () => {
 
   return (
     <div class="history-list">
-      {histories.map((history) => (
-        <HistoryItem
-          {...history}
-          key={`history-${history.timestamp}`}
-        />
-      ))}
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>棋手</th>
+            <th>执黑/执白</th>
+            <th>落子位置</th>
+            <th>消耗时间</th>
+          </tr>
+        </thead>
+        <tbody>
+          {histories.map((history) => (
+            <HistoryItem
+              {...history}
+              key={`history-${history.timestamp}`}
+            />
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 };
