@@ -1,0 +1,5 @@
+form.settings-radio-group {
+  display: flex;
+  flex-direction: row;
+  gap: 2em
+}
