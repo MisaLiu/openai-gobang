@@ -1,25 +1,20 @@
+import { useState, useEffect } from 'preact/hooks';
 import ChessLabelRow from './LabelRow';
 import ChessLabelColumn from './LabelColumn';
 import ChessBlocks from './Blocks';
 import ChessPieces from "./Pieces";
+import SettingsStore from '../state/settings';
 import './style.css';
-import type { ChessPiece } from '../types';
 
-interface ChessBoardProps {
-  onPlaced: (piece: ChessPiece) => void;
-  size?: number;
-  placeType?: 'black' | 'white',
-  pieces?: ChessPiece[],
-  allowPlace?: boolean,
-}
+const ChessBoard = () => {
+  const [ size, setSize ] = useState<number>(15);
 
-const ChessBoard = ({
-  onPlaced,
-  size = 15,
-  placeType = 'black',
-  pieces = [],
-  allowPlace = true,
-}: ChessBoardProps) => {
+  useEffect(() => {
+    return SettingsStore.subscribe((s, p) => {
+      if (s.boardSize !== p.boardSize) setSize(s.boardSize);
+    });
+  }, []);
+
   return (
     <div
       class="chessboard-container"
@@ -33,10 +28,6 @@ const ChessBoard = ({
         <ChessBlocks size={size} />
         <ChessPieces
           size={size}
-          pieces={pieces}
-          onPlace={onPlaced}
-          placeType={placeType}
-          allowPlace={allowPlace}
         />
       </div>
     </div>

@@ -1,5 +1,7 @@
-import { useState, useRef } from 'preact/compat';
+import { useState, useEffect, useRef } from 'preact/compat';
 import { memo } from 'preact/compat';
+import SettingsStore from '../state/settings';
+import GameStore, { placePiece } from '../state/game';
 import type { ChessPiece, Point } from '../types';
 
 const calcPiecePosition = (
@@ -34,20 +36,15 @@ const ChessPiece = memo(({
 
 interface ChessPieces {
   size: number;
-  pieces: ChessPiece[],
-  onPlace: (piece: ChessPiece) => void;
-  allowPlace?: boolean;
-  placeType?: 'black' | 'white';
 }
 
 const ChessPieces = ({
   size,
-  pieces,
-  onPlace,
-  allowPlace = true,
-  placeType = 'black',
 }: ChessPieces) => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const [ pieces, setPieces ] = useState<ChessPiece[]>([]);
+  const [ allowPlace, setAllowPlace ] = useState<boolean>(false);
+  const [ placeType, setPlaceType ] = useState<'black' | 'white'>('black');
   const [ pointerPiecePosX, setPointerPiecePosX ] = useState(-1);
   const [ pointerPiecePosY, setPointerPiecePosY ] = useState(-1);
 
@@ -74,7 +71,7 @@ const ChessPieces = ({
     const existedPiece = pieces.findIndex(e => e.row === point.x && e.column === point.y);
     if (existedPiece !== -1) return;
 
-    onPlace({
+    placePiece({
       type: placeType,
       row: point.x,
       column: point.y,
@@ -87,6 +84,28 @@ const ChessPieces = ({
     setPointerPiecePosX(-1);
     setPointerPiecePosY(-1);
   };
+
+  const updateAllowPlace = () => {
+    const { isStarted, allowPlace } = GameStore.getState();
+    setAllowPlace(isStarted && allowPlace);
+  };
+
+  useEffect(() => {
+    const unsubGame = GameStore.subscribe((s, p) => {
+      if (s.pieces !== p.pieces) setPieces(s.pieces);
+      if (s.isStarted !== p.isStarted) updateAllowPlace();
+      if (s.allowPlace !== p.allowPlace) updateAllowPlace();
+    });
+
+    const unsubSettings = SettingsStore.subscribe((s, p) => {
+      if (s.llmFirst !== p.llmFirst) setPlaceType(s.llmFirst ? 'white' : 'black');
+    });
+
+    return (() => {
+      unsubGame();
+      unsubSettings();
+    });
+  }, []);
 
   return (
     <div

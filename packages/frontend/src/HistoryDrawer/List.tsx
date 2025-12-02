@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'preact/hooks';
 import HistoryItem from './Item';
-import HistoryStore from '../state/history';
+import GameStore from '../state/game';
 import type { PlaceHistory } from '../types';
 
 const HistoryList = () => {
@@ -14,15 +14,10 @@ const HistoryList = () => {
     });
   }
 
-  const updateHistories = () => {
-    const { histories } = HistoryStore.getState();
-
-    setHistories(histories);
-    setExpandedThoughts(histories[0].timestamp);
-  };
-
   useEffect(() => {
-    return HistoryStore.subscribe(() => { updateHistories() });
+    return GameStore.subscribe((s, p) => {
+      if (s.histories !== p.histories) setHistories(s.histories);
+    });
   }, []);
 
   return (
