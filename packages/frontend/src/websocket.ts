@@ -4,38 +4,18 @@ import type { ChessPiece } from './types';
 
 export class ChessWebSocket extends EventEmitter {
   private readonly sessionId: string = window.localStorage.getItem('sessiontoken') || nanoid();
-  private ws: WebSocket;
+  private ws!: WebSocket;
   private mq: (Object | string)[] = [];
   private pingClock?: ReturnType<typeof setInterval>;
   
   constructor(difficulty: 0 | 1 | 2 | 3, size: number = 15) {
     super();
 
-    const ws = new WebSocket('./api/ws');
+    this.start(difficulty, size);
+  }
 
-    ws.onopen = () => {
-      this.sendMQ();
-      this.startPingClock();
-      this.emit('connection', this);
-    };
-
-    ws.onmessage = (e) => {
-      try {
-        const json = JSON.parse(e.data);
-        json._raw = e.data;
-        this.handleMessage(json);
-      } catch {}
-    };
-
-    ws.onerror = (e) => {
-      this.emit('error', e);
-    };
-
-    ws.onclose = () => {
-      this.emit('closed');
-    };
-
-    this.ws = ws;
+  start(difficulty: 0 | 1 | 2 | 3, size: number = 15) {
+    this.ws = this.createWs();
     this.send({
       type: 'start',
       data: {
@@ -53,6 +33,27 @@ export class ChessWebSocket extends EventEmitter {
         ...piece,
       }
     });
+  }
+
+  private createWs() {
+    if (this.ws && this.ws.readyState === 1) return this.ws;
+    if (this.pingClock) clearInterval(this.pingClock);
+
+    const ws = new WebSocket('./api/ws');
+
+    ws.onopen = this.handleOpen.bind(this);
+
+    ws.onmessage = this.handleMessage.bind(this);
+
+    ws.onerror = (e) => {
+      this.emit('error', e);
+    };
+
+    ws.onclose = () => {
+      this.emit('closed');
+    };
+
+    return ws;
   }
 
   private send(message: Object | string) {
@@ -87,26 +88,37 @@ export class ChessWebSocket extends EventEmitter {
     }, 30000);
   }
 
-  private handleMessage(msg: any) {
-    const { type, data } = msg;
+  private handleOpen() {
+    this.sendMQ();
+    this.startPingClock();
+    this.emit('connection', this);
+  }
 
-    switch (type) {
-      case 'ready': {
-        this.emit('ready', data);
-        break;
-      }
+  private handleMessage(e: MessageEvent) {
+    try {
+      const json = JSON.parse(e.data);
+      json._raw = e.data;
+      
+      const { type, data } = json;
 
-      case 'placeLLM': {
-        this.emit('place', data);
-        break;
-      }
+      switch (type) {
+        case 'ready': {
+          this.emit('ready', data);
+          break;
+        }
 
-      case 'stream': {
-        this.emit('stream', data);
-        break;
-      }
+        case 'placeLLM': {
+          this.emit('place', data);
+          break;
+        }
 
-      default: {};
-    };
+        case 'stream': {
+          this.emit('stream', data);
+          break;
+        }
+
+        default: {};
+      };
+    } catch {}
   }
 };
