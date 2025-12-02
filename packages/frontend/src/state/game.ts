@@ -2,14 +2,24 @@ import { createStore } from 'zustand';
 import SettingsStore from './settings';
 import ThoughtStore, { appendThought } from './thought';
 import { ChessWebSocket } from '../websocket';
-import type { ChessPiece, PlaceHistory } from '../types';
+import type { ChessPiece, PlaceHistory, PieceArray } from '../types';
+
+const appendPieceToArr = (pieceArr: PieceArray, piece: ChessPiece) => {
+  const result = [ ...pieceArr ];
+
+  if (!result[piece.row]) result[piece.row] = [];
+  const columnArr = result[piece.row];
+  columnArr[piece.column] = piece.type === 'black' ? 1 : 2;
+
+  return result;
+};
 
 interface IGameStore {
   isStarted: boolean,
   allowPlace: boolean,
 
   userPlaceStartTime: number,
-  pieces: ChessPiece[],
+  pieces: PieceArray,
   histories: PlaceHistory[],
 
   ws: ChessWebSocket | null,
@@ -39,15 +49,9 @@ export const startGame = () => {
   ws.once('ready', (data: { piece?: ChessPiece, thoughts?: string }) => {
     const currentTime = Date.now();
 
-    GameStore.setState({
-      userPlaceStartTime: currentTime,
-      isStarted: true,
-      allowPlace: true,
-    });
-
     if (data.piece) {
       GameStore.setState({
-        pieces: [ data.piece ],
+        pieces: appendPieceToArr([], data.piece),
         histories: [
           {
             placedBy: 'llm',
@@ -58,6 +62,12 @@ export const startGame = () => {
         ],
       });
     }
+
+    GameStore.setState({
+      userPlaceStartTime: currentTime,
+      isStarted: true,
+      allowPlace: true,
+    });
 
     ThoughtStore.setState({
       thought: data.thoughts,
@@ -70,7 +80,7 @@ export const startGame = () => {
     
     GameStore.setState({
       userPlaceStartTime: currentTime,
-      pieces: [ data.piece, ...pieces ],
+      pieces: appendPieceToArr(pieces, data.piece),
       histories: [
         {
           placedBy: 'llm',
@@ -105,7 +115,7 @@ export const placePiece = (piece: ChessPiece) => {
   const currentTime = Date.now();
   const { userPlaceStartTime, pieces, histories } = GameStore.getState();
   GameStore.setState({
-    pieces: [ piece, ...pieces ],
+    pieces: appendPieceToArr(pieces, piece),
     histories: [
       {
         placedBy: 'user',

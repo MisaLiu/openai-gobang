@@ -16,3 +16,5 @@ export interface PlaceHistory {
   piece: ChessPiece,
   timeSpent: number,
 };
+
+export type PieceArray = Array<(1 | 2 | undefined)[]>;

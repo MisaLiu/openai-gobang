@@ -2,7 +2,8 @@ import { useState, useEffect, useRef } from 'preact/compat';
 import { memo } from 'preact/compat';
 import SettingsStore from '../state/settings';
 import GameStore, { placePiece } from '../state/game';
-import type { ChessPiece, Point } from '../types';
+import { findPiece } from '../utils';
+import type { ChessPiece, Point, PieceArray } from '../types';
 
 const calcPiecePosition = (
   boardSize: number,
@@ -45,7 +46,7 @@ const ChessPieces = ({
   const placeType = llmFirst ? 'white' : 'black';
 
   const containerRef = useRef<HTMLDivElement>(null);
-  const [ pieces, setPieces ] = useState<ChessPiece[]>([]);
+  const [ pieces, setPieces ] = useState<PieceArray>([]);
   const [ allowPlace, setAllowPlace ] = useState<boolean>(false);
   const [ pointerPiecePosX, setPointerPiecePosX ] = useState(-1);
   const [ pointerPiecePosY, setPointerPiecePosY ] = useState(-1);
@@ -69,9 +70,7 @@ const ChessPieces = ({
     if (!containerDom) return;
 
     const point = calcPiecePosition(size, e, containerDom);
-
-    const existedPiece = pieces.findIndex(e => e.row === point.x && e.column === point.y);
-    if (existedPiece !== -1) return;
+    if (findPiece(pieces, point.x, point.y) !== null) return;
 
     placePiece({
       type: placeType,
@@ -112,15 +111,18 @@ const ChessPieces = ({
       onPointerLeave={handleMouseLeave}
       ref={containerRef}
     >
-      {pieces.map((e) => (
-        <ChessPiece
-          type={e.type}
-          row={e.row}
-          column={e.column}
-          isPointer={false}
-          key={`chess-piece-${e.type}-${e.row}-${e.column}`}
-        />
-      ))}
+      {pieces.map((columnArr, rowId) => {
+        if (!columnArr) return null;
+        return columnArr.map((type, columnId) => (
+          <ChessPiece
+            type={type === 1 ? 'black' : 'white'}
+            row={rowId}
+            column={columnId}
+            isPointer={false}
+            key={`chess-piece-${type}-${rowId}-${columnId}`}
+          />
+        ));
+      })}
       {(pointerPiecePosX != -1 && pointerPiecePosY != -1) && (
         <ChessPiece
           type={placeType}
