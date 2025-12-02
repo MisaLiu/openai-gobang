@@ -3,7 +3,7 @@ import { memo } from 'preact/compat';
 import SettingsStore from '../state/settings';
 import GameStore, { placePiece } from '../state/game';
 import { findPiece } from '../utils';
-import type { ChessPiece, Point, PieceArray } from '../types';
+import type { ChessPiece, Point, PlaceHistory } from '../types';
 
 const calcPiecePosition = (
   boardSize: number,
@@ -16,21 +16,25 @@ const calcPiecePosition = (
 
 interface ChessPieceProps extends ChessPiece {
   isPointer?: boolean;
+  index?: number;
 };
 
 const ChessPiece = memo(({
   type,
   row,
   column,
-  isPointer = false
+  isPointer = false,
+  index = (void 0),
 }: ChessPieceProps) => {
   return (
     <div
-      class={`piece ${type} ${isPointer ? 'pointing' : ''}`}
+      class={`piece ${isPointer ? 'pointing' : ''}`}
       style={{
         '--pos-row': row,
         '--pos-column': column,
       }}
+      data-type={type}
+      data-index={index !== (void 0) && index + 1}
     ></div>
   );
 });
@@ -46,7 +50,7 @@ const ChessPieces = ({
   const placeType = llmFirst ? 'white' : 'black';
 
   const containerRef = useRef<HTMLDivElement>(null);
-  const [ pieces, setPieces ] = useState<PieceArray>([]);
+  const [ histories, setHistories ] = useState<PlaceHistory[]>(GameStore.getState().histories);
   const [ allowPlace, setAllowPlace ] = useState<boolean>(false);
   const [ pointerPiecePosX, setPointerPiecePosX ] = useState(-1);
   const [ pointerPiecePosY, setPointerPiecePosY ] = useState(-1);
@@ -69,6 +73,7 @@ const ChessPieces = ({
     const containerDom = containerRef.current;
     if (!containerDom) return;
 
+    const { pieces } = GameStore.getState();
     const point = calcPiecePosition(size, e, containerDom);
     if (findPiece(pieces, point.x, point.y) !== null) return;
 
@@ -93,7 +98,7 @@ const ChessPieces = ({
 
   useEffect(() => {
     const unsubGame = GameStore.subscribe((s, p) => {
-      if (s.pieces !== p.pieces) setPieces(s.pieces);
+      if (s.histories !== p.histories) setHistories(s.histories);
       if (s.isStarted !== p.isStarted) updateAllowPlace();
       if (s.allowPlace !== p.allowPlace) updateAllowPlace();
     });
@@ -111,18 +116,16 @@ const ChessPieces = ({
       onPointerLeave={handleMouseLeave}
       ref={containerRef}
     >
-      {pieces.map((columnArr, rowId) => {
-        if (!columnArr) return null;
-        return columnArr.map((type, columnId) => (
-          <ChessPiece
-            type={type === 1 ? 'black' : 'white'}
-            row={rowId}
-            column={columnId}
-            isPointer={false}
-            key={`chess-piece-${type}-${rowId}-${columnId}`}
-          />
-        ));
-      })}
+      {histories.map(({ piece, index }) => (
+        <ChessPiece
+          type={piece.type}
+          row={piece.row}
+          column={piece.column}
+          isPointer={false}
+          index={index}
+          key={`chess-piece-${piece.type}-${piece.row}-${piece.column}`}
+        />
+      ))}
       {(pointerPiecePosX != -1 && pointerPiecePosY != -1) && (
         <ChessPiece
           type={placeType}

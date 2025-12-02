@@ -114,16 +114,28 @@
   pointer-events: none;
 }
 
-.chessboard-container .chessboard-main .pieces > div.piece.black {
+.chessboard-container .chessboard-main .pieces > div.piece[data-type="black"] {
   background-color: var(--piece-color-black);
 }
 
-.chessboard-container .chessboard-main .pieces > div.piece.white {
+.chessboard-container .chessboard-main .pieces > div.piece[data-type="white"] {
   background-color: var(--piece-color-white);
 }
 
 .chessboard-container .chessboard-main .pieces > div.piece.pointing {
   opacity: 0.5;
+}
+
+.chessboard-container.finished .chessboard-main .pieces > div.piece[data-index]::before {
+  content: attr(data-index);
+  display: block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  color: #dbdbdb;
+  font-size: 1em;
+  font-weight: 600;
+  transform: translate(-50%, -50%);
 }
 
 .chessboard-container::before {
@@ -168,4 +180,8 @@
 .chessboard-container .chessboard-overlay.show {
   opacity: 1;
   pointer-events: all;
+}
+
+.chessboard-container.finished .chessboard-overlay {
+  display: none;
 }

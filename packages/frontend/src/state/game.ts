@@ -57,6 +57,7 @@ export const startGame = () => {
         pieces: appendPieceToArr([], data.piece),
         histories: [
           {
+            index: 0,
             placedBy: 'llm',
             piece: data.piece,
             timestamp: currentTime,
@@ -87,6 +88,7 @@ export const startGame = () => {
       pieces: appendPieceToArr(pieces, data.piece),
       histories: [
         {
+          index: histories.length,
           placedBy: 'llm',
           piece: data.piece,
           timeSpent: data.timeSpent || 0,
@@ -133,6 +135,7 @@ export const placePiece = (piece: ChessPiece) => {
     pieces: appendPieceToArr(pieces, piece),
     histories: [
       {
+        index: histories.length,
         placedBy: 'user',
         piece,
         timestamp: currentTime,

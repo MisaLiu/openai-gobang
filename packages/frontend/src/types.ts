@@ -11,6 +11,7 @@ export interface ChessPiece {
 };
 
 export interface PlaceHistory {
+  index: number,
   placedBy: 'user'| 'llm',
   timestamp: number,
   piece: ChessPiece,
