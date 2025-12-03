@@ -138,6 +138,48 @@
   transform: translate(-50%, -50%);
 }
 
+.chessboard-container .star-points {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.chessboard-container .star-points .star-point {
+  position: absolute;
+  width: calc(var(--block-size) / 4);
+  height: calc(var(--block-size) / 4);
+  background-color: currentColor;
+  transform: translate(-50%, -50%);
+}
+
+.chessboard-container .star-points .star-point.top-left,
+.chessboard-container .star-points .star-point.top-right {
+  top: calc(var(--block-size) * 3);
+}
+
+.chessboard-container .star-points .star-point.bottom-left,
+.chessboard-container .star-points .star-point.bottom-right {
+  top: calc(var(--blocks-dom-size) - var(--block-size) * 3);
+}
+
+.chessboard-container .star-points .star-point.top-left,
+.chessboard-container .star-points .star-point.bottom-left {
+  left: calc(var(--block-size) * 3);
+}
+
+.chessboard-container .star-points .star-point.top-right,
+.chessboard-container .star-points .star-point.bottom-right {
+  left: calc(var(--blocks-dom-size) - var(--block-size) * 3);
+}
+
+.chessboard-container .star-points .star-point.center {
+  top: 50%;
+  left: 50%;
+}
+
 .chessboard-container::before {
   content: '';
   width: var(--block-size);
