@@ -7,9 +7,9 @@ const StarPointPosition = [
   'center'
 ];
 
-const ChessStarPoint = () => {
+const ChessBoardGrid = () => {
   return (
-    <div class="star-points">
+    <div class="chessboard-grid">
       {StarPointPosition.map((pos) => (
         <div
           class={`star-point ${pos}`}
@@ -20,4 +20,4 @@ const ChessStarPoint = () => {
   )
 };
 
-export default ChessStarPoint;
+export default ChessBoardGrid;

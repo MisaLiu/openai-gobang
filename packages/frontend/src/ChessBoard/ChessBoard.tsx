@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'preact/hooks';
 import ChessLabelRow from './LabelRow';
 import ChessLabelColumn from './LabelColumn';
-import ChessBlocks from './Blocks';
-import ChessStarPoint from './StarPoint';
+import ChessBoardGrid from './Grid';
 import ChessPieces from "./Pieces";
 import ChessBoardOverlay from './Overlay';
 import SettingsStore from '../state/settings';
@@ -29,8 +28,7 @@ const ChessBoard = () => {
       <ChessLabelRow size={size} />
       <ChessLabelColumn size={size} />
       <div class="chessboard-main">
-        <ChessBlocks size={size} />
-        <ChessStarPoint />
+        <ChessBoardGrid />
         <ChessPieces
           size={size}
         />
