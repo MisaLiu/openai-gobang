@@ -19,6 +19,12 @@ interface ChatResponse {
   thoughts: string | null,
 }
 
+const OpenAIConfig = {
+  model: process.env.OPENAI_MODEL || 'gpt-4o',
+  temperature: 0.1,
+  // For adding extra_body, use { baz: '...' }
+};
+
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_ACCESS_KEY,
   baseURL: process.env.OPENAI_BASE_URL || 'https://api.openai.com/v1',
@@ -43,7 +49,7 @@ export const sendChat = (sessionId: string, message: string, prompt?: string) =>
   const startTime = performance.now();
   openai.chat.completions.create({
     messages: chats,
-    model: process.env.OPENAI_MODEL || 'gpt-4o',
+    ...OpenAIConfig,
   }).then((completion) => {
     let thoughts: string | null = null;
 
@@ -91,7 +97,7 @@ export const sendChatStream = (
     const startTime = performance.now();
     const stream = await openai.chat.completions.create({
       messages: chats,
-      model: process.env.OPENAI_MODEL || 'gpt-4o',
+      ...OpenAIConfig,
       stream: true,
     });
 
