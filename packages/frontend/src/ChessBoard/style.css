@@ -67,7 +67,7 @@
   --star-point-size: calc(var(--block-size, 2em) / 4);
   --star-point-dom-size: calc(var(--star-point-size) + 1px);
 
-  --star-point-margin: calc(var(--board-dom-size) / var(--board-size, 15) * 3);
+  --star-point-margin: calc(var(--board-dom-size) / var(--chessboard-size, 15) * 3);
   --star-point-margin-top: calc(var(--star-point-margin) + var(--star-point-size) / 4);
   --star-point-margin-left: calc(var(--star-point-margin) + var(--star-point-size) / 4);
   --star-point-margin-bottom: calc(var(--board-dom-size) - var(--star-point-margin) - var(--star-point-size) / 0.75);
