@@ -2,8 +2,10 @@ import OpenAI from 'openai';
 import { ChatHistory } from '../cache';
 import { buildPrompt } from './prompt';
 import { StreamablePromise } from './class';
-import type { ChatCompletionMessage } from 'openai/resources';
+import type { ChatCompletionCreateParamsNonStreaming, ChatCompletionMessage } from 'openai/resources';
 import type { ChatHistory as IChatHistory } from '../types';
+
+interface OpenAIConfig extends Omit<ChatCompletionCreateParamsNonStreaming, 'messages'> {}
 
 interface $ChatCompletionMessage extends ChatCompletionMessage {
   reasoning_content?: string;
@@ -19,9 +21,10 @@ interface ChatResponse {
   thoughts: string | null,
 }
 
-const OpenAIConfig = {
+const OpenAIConfig: OpenAIConfig = {
   model: process.env.OPENAI_MODEL || 'gpt-4o',
   temperature: 0.1,
+  reasoning_effort: 'high',
   // For adding extra_body, use { baz: '...' }
 };
 
