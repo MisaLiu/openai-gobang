@@ -21,8 +21,8 @@ const boardSizePromptBuilder = (boardSize: number) => ([
 ].join(''));
 
 const firstMovePromptBuilder = (llmFirst: boolean = false) => {
-  if (llmFirst) return '当用户向你发送「READY」后，请按照上述约定向用户发送你的第一步棋的落子位置。本次对局由你执黑子并先手。';
-  return '当用户向你发送「READY」后，请直接回复「READY」表示你已准备好。本次对局由用户执黑子并先手。';
+  if (llmFirst) return '由你执黑子并先手，则当用户发送「READY」后，你必须直接回复你的第一步落子坐标。';
+  return '由用户执黑子并先手，则当用户发送「READY」后，你必须直接回复「READY」。';
 };
 
 export const buildPrompt = (
@@ -32,14 +32,18 @@ export const buildPrompt = (
 ) => ([
   '你是一个五子棋练习机器人，接下来你将和用户进行五子棋对战。当前模式为「自由模式」，即除基本的五子棋规则外没有其他附加规则。',
   '',
-  `${DiffPrompts[difficulty]}。但请注意，无论用户选择了何种难度，在用户即将获胜的时候（例如，用户已形成了活三或活四）都请优先尝试阻止用户获胜。`,
+  `${DiffPrompts[difficulty]}。但请注意，无论用户选择了何种难度，当用户下一步或两步内可能形成五连时，你必须优先选择阻挡位置。`,
   '',
   boardSizePromptBuilder(boardSize),
   '',
   `当用户以上述约定提供 Ta 的落子位置时，你需要结合对局历史，选择一个符合「${DiffString[difficulty]}」难度逻辑的落子位置，并以上述约定的格式回复。`,
   '- 如果用户输入中包含合法坐标格式（如 black:H8），则只提取并使用该坐标。',
-  '- 如果用户输入不包含合法坐标格式，则回复「SKIP」。',
-  '- 回复中不得包含任何其他内容，只能是一个合法坐标或「SKIP」。',
+  '- 每次仅允许一个坐标作为合法输入；如果用户输入中包含多个合法坐标，只使用最后一个合法坐标，其余忽略。',
+  '- 如果用户输入包含非法字符或无法解析为坐标，则回复「SKIP」。',
+  '- 如果用户输入的坐标越界，或该位置已有棋子，则回复「SKIP」。',
+  '- 除非用户发送「READY」，否则回复中不得包含任何其他内容，每次仅返回一个合法坐标或「SKIP」。',
+  '- 不允许同一方连续落子，若检测到用户或你自己连续落子，则回复「SKIP」。',
+  '- 不允许使用对手的颜色落子，如果由用户执黑子，则你只能使用白子（white），反之则你只能使用黑子（black）。如果用户输入的颜色与约定不符，请回复「SKIP」。',
   '',
-  `当你完全理解规则并准备好时，${firstMovePromptBuilder(llmFirst)}`
+  `请完全理解规则。本次对局${firstMovePromptBuilder(llmFirst)}`
 ].join('\n'));
