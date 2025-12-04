@@ -2,101 +2,130 @@
   --chessboard-size: 15;
   --block-size: 2em;
 
-  --dom-size: calc((var(--chessboard-size, 15) + 1) * var(--block-size, 2em));
+  --dom-size: calc((var(--chessboard-size, 15)) * var(--block-size, 2em));
   
   display: grid;
   position: relative;
   width: var(--dom-size);
   height: var(--dom-size);
-  padding: var(--block-size);
-  padding-top: 0;
-  padding-left: 0;
+  padding-bottom: var(--block-size);
+  padding-right: var(--block-size);
   margin: 0 auto;
   grid-template-rows: repeat(12, 1fr);
   grid-template-columns: repeat(12, 1fr);
   gap: 0px;
 }
 
-.chessboard-container .labels-row {
+.chessboard-container .labels {
   display: flex;
-  height: var(--block-size);
-  text-align: center;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
   flex-wrap: nowrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--block-size);
+}
+
+.chessboard-container .labels.row {
+  flex-direction: row;
   grid-column: span 11 / span 11;
   grid-column-start: 2;
   grid-row-start: 1;
 }
 
-.chessboard-container .labels-column {
-  display: flex;
-  width: var(--block-size);
-  alignment-baseline: central;
+.chessboard-container .labels.column {
   flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: nowrap;
   grid-row: span 11 / span 11;
+  grid-column-start: 1;
   grid-row-start: 2;
 }
 
+.chessboard-container .labels .label {
+  position: relative;
+}
+
+.chessboard-container .labels .label::before {
+  content: attr(data-label);
+  position: absolute;
+  transform: translate(-50%, -50%);
+}
+
 .chessboard-container .chessboard-main {
-  --blocks-dom-size: calc(var(--block-size) * (var(--chessboard-size) - 1));
+  --board-dom-size: calc(var(--block-size) * (var(--chessboard-size) - 1));
 
   display: block;
   position: relative;
-  width: var(--blocks-dom-size);
-  height: var(--blocks-dom-size);
+  width: var(--board-dom-size);
+  height: var(--board-dom-size);
   grid-column: span 11 / span 11;
   grid-row: span 11 / span 11;
+  grid-column-start: 2;
   grid-row-start: 2;
 }
 
 .chessboard-container .chessboard-grid {
+  --board-dom-size-half: calc(var(--board-dom-size) / 2);
+
+  --star-point-size: calc(var(--block-size, 2em) / 4);
+  --star-point-dom-size: calc(var(--star-point-size) + 1px);
+
+  --star-point-margin: calc(var(--board-dom-size) / var(--board-size, 15) * 3);
+  --star-point-margin-top: calc(var(--star-point-margin) + var(--star-point-size) / 4);
+  --star-point-margin-left: calc(var(--star-point-margin) + var(--star-point-size) / 4);
+  --star-point-margin-bottom: calc(var(--board-dom-size) - var(--star-point-margin) - var(--star-point-size) / 0.75);
+  --star-point-margin-right: calc(var(--board-dom-size) - var(--star-point-margin) - var(--star-point-size) / 0.75);
+
+  --star-point-style:
+    linear-gradient(225deg, transparent 50%, currentcolor 0, currentcolor 100%, transparent 0),
+    linear-gradient(45deg, transparent 50%, currentcolor 0, currentcolor 100%, transparent 0);
+
   position: relative;
-  width: calc(var(--blocks-dom-size) + 1px);
-  height: calc(var(--blocks-dom-size) + 1px);
+  width: calc(var(--board-dom-size) + 1px);
+  height: calc(var(--board-dom-size) + 1px);
   background:
-    repeating-linear-gradient(currentColor, currentColor 1px, transparent 1px, transparent var(--block-size)),
-    repeating-linear-gradient(90deg, currentColor, currentColor 1px, transparent 1px, transparent var(--block-size));
+    /* The grid */
+    repeating-linear-gradient(currentcolor, currentcolor 1px, transparent 1px, transparent var(--block-size, 2em)),
+    repeating-linear-gradient(90deg, currentcolor, currentcolor 1px, transparent 1px, transparent var(--block-size, 2em)),
+    /* Star point: center */
+    var(--star-point-style),
+    /* Star point: top left */
+    var(--star-point-style),
+    /* Star point: top right */
+    var(--star-point-style),
+    /* Star point: bottom left */
+    var(--star-point-style),
+    /* Star point: bottom right */
+    var(--star-point-style);
   background-repeat: no-repeat;
-  background-size: 100% 100%, 100% 100%;
-  background-position: 0 0, 0 0;
-}
-
-.chessboard-container .chessboard-grid .star-point {
-  position: absolute;
-  width: calc(var(--block-size) / 4);
-  height: calc(var(--block-size) / 4);
-  background-color: currentColor;
-  transform: translate(-50%, -50%);
-}
-
-.chessboard-container .chessboard-grid .star-point.top-left,
-.chessboard-container .chessboard-grid .star-point.top-right {
-  top: calc(var(--block-size) * 3);
-}
-
-.chessboard-container .chessboard-grid .star-point.bottom-left,
-.chessboard-container .chessboard-grid .star-point.bottom-right {
-  top: calc(var(--blocks-dom-size) - var(--block-size) * 3);
-}
-
-.chessboard-container .chessboard-grid .star-point.top-left,
-.chessboard-container .chessboard-grid .star-point.bottom-left {
-  left: calc(var(--block-size) * 3);
-}
-
-.chessboard-container .chessboard-grid .star-point.top-right,
-.chessboard-container .chessboard-grid .star-point.bottom-right {
-  left: calc(var(--blocks-dom-size) - var(--block-size) * 3);
-}
-
-.chessboard-container .chessboard-grid .star-point.center {
-  top: 50%;
-  left: 50%;
+  background-size:
+    /* The grid */
+    100% 100%, 100% 100%,
+    /* Star point: center */
+    var(--star-point-dom-size) var(--star-point-dom-size), var(--star-point-dom-size) var(--star-point-dom-size),
+    /* Star point: top left */
+    var(--star-point-dom-size) var(--star-point-dom-size), var(--star-point-dom-size) var(--star-point-dom-size),
+    /* Star point: top right */
+    var(--star-point-dom-size) var(--star-point-dom-size), var(--star-point-dom-size) var(--star-point-dom-size),
+    /* Star point: bottom left */
+    var(--star-point-dom-size) var(--star-point-dom-size), var(--star-point-dom-size) var(--star-point-dom-size),
+    /* Star point: bottom right */
+    var(--star-point-dom-size) var(--star-point-dom-size), var(--star-point-dom-size) var(--star-point-dom-size);
+  background-position:
+    /* The grid */
+    0 0, 0 0,
+    /* Star point: center */
+    calc(var(--board-dom-size-half) - var(--star-point-size) / 2) calc(var(--board-dom-size-half) - var(--star-point-size) / 2),
+    calc(var(--board-dom-size-half) - var(--star-point-size) / 2) calc(var(--board-dom-size-half) - var(--star-point-size) / 2),
+    /* Star point: top left */
+    var(--star-point-margin-left) var(--star-point-margin-top),
+    var(--star-point-margin-left) var(--star-point-margin-top),
+    /* Star point: top right */
+    var(--star-point-margin-right) var(--star-point-margin-top),
+    var(--star-point-margin-right) var(--star-point-margin-top),
+    /* Star point: bottom left */
+    var(--star-point-margin-left) var(--star-point-margin-bottom),
+    var(--star-point-margin-left) var(--star-point-margin-bottom),
+    /* Star point: bottom right */
+    var(--star-point-margin-right) var(--star-point-margin-bottom),
+    var(--star-point-margin-right) var(--star-point-margin-bottom);
 }
 
 .chessboard-container .chessboard-main .pieces {
@@ -104,8 +133,8 @@
   position: absolute;
   top: 0;
   left: 0;
-  width: var(--blocks-dom-size);
-  height: var(--blocks-dom-size);
+  width: var(--board-dom-size);
+  height: var(--board-dom-size);
 }
 
 .chessboard-container .chessboard-main .pieces > div.piece {
@@ -147,23 +176,6 @@
   transform: translate(-50%, -50%);
 }
 
-.chessboard-container .star-points {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-}
-
-.chessboard-container::before {
-  content: '';
-  width: var(--block-size);
-  height: var(--block-size);
-  grid-column-start: 1;
-  grid-row-start: 1;
-}
-
 .chessboard-container .chessboard-overlay {
   position: absolute;
   top: 0;
@@ -192,6 +204,7 @@
   position: absolute;
   top: 50%;
   left: 50%;
+  white-space: nowrap;
   transform: translate(-50%, -50%);
 }
 

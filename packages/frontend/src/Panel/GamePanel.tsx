@@ -6,7 +6,6 @@ const GamePanel = () => {
   return (
     <>
       <ChessBoard />
-      <hr />
       <HistoryBoard />
       <hr />
       <ThoughtBoard />
