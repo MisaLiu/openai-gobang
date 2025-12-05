@@ -4,6 +4,8 @@
 :root {
   --piece-color-black: rgb(255, 49, 49);
   --piece-color-white: rgb(50, 50, 255);
+
+  scroll-behavior: smooth;
 }
 
 fieldset.groupbox {
