@@ -25,12 +25,14 @@ const OpenAIConfig: OpenAIConfig = {
   model: process.env.OPENAI_MODEL || 'gpt-4o',
   temperature: 0.1,
   reasoning_effort: 'high',
-  // For adding extra_body, use { baz: '...' }
+  // @ts-expect-error Force models thinking while using VolceEngine.
+  thinking: { type: 'enabled' },
 };
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_ACCESS_KEY,
   baseURL: process.env.OPENAI_BASE_URL || 'https://api.openai.com/v1',
+  // logLevel: 'debug',
 });
 
 export const hasChat = (sessionId: string) => {
